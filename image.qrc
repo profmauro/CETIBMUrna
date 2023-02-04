@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>img/brasil_-_reproducao.jpg</file>
+        <file>img/user.png</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>sound/fimdovoto.wav</file>
+    </qresource>
+</RCC>
