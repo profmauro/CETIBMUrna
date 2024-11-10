@@ -1,24 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qdb.h"
-#include "loggingcategories.h"
-#include "audio.h"
 #include <QProcess>
+#include <QInputDialog>
+#include <QInputDialog>
+#include <QCloseEvent>
 
-QDBMysql::DB db;
-LoggingCategories hash;
-Audio audio;
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QSqlDatabase dbConn, QWidget *parent) :
     QMainWindow(parent),
-    ui1(new Ui::MainWindow)
+    ui1(new Ui::MainWindow),
+    db(dbConn)
 {
+    setWindowTitle("CETI Baurelio Mangabeira - Eleição 2024");
+    eleitor = new Eleitor();
     ui1->setupUi(this);
-
-    timer = new QTimer(this);
-    db.dbstate = db.Connect();
-
     ui1->winStack->setCurrentIndex(0);
+
     ui1->prefeito_1->setValidator(new QIntValidator(0,9,this));
     ui1->prefeito_2->setValidator(new QIntValidator(0,9,this));
     ui1->vereador_1->setValidator(new QIntValidator(0,9,this));
@@ -27,130 +24,216 @@ MainWindow::MainWindow(QWidget *parent) :
     ui1->vereador_4->setValidator(new QIntValidator(0,9,this));
     ui1->vereador_5->setValidator(new QIntValidator(0,9,this));
 
+    connect(ui1->prefeito_1, &QLineEdit::textChanged, this, &MainWindow::checkFocus1);
+    connect(ui1->prefeito_2, &QLineEdit::textChanged, this, &MainWindow::checkFocus1);
+    connect(ui1->vereador_1, &QLineEdit::textChanged, this, &MainWindow::checkFocus2);
+    connect(ui1->vereador_2, &QLineEdit::textChanged, this, &MainWindow::checkFocus2);
+    connect(ui1->vereador_3, &QLineEdit::textChanged, this, &MainWindow::checkFocus2);
+    connect(ui1->vereador_4, &QLineEdit::textChanged, this, &MainWindow::checkFocus2);
+    connect(ui1->vereador_5, &QLineEdit::textChanged, this, &MainWindow::checkFocus2);
+
+    connect(ui1->eleitor, &QPushButton::clicked, this, &MainWindow::abrir_janela_eleitor);
+
+    connect(eleitor, &Eleitor::enviar_matricula, this, &MainWindow::receber_matricula);
+    connect(this, &MainWindow::confirmado_matricula, eleitor, &Eleitor::recebendo_eleitor);
+    connect(eleitor, &Eleitor::iniciar_votacao, this, &MainWindow::iniciando_votacao);
+    connect(this, &MainWindow::enviando_processo, eleitor, &Eleitor::processo_voto);
+
+    limparprefeito();
+    limparvereador();
 }
+
 MainWindow::~MainWindow()
 {
     delete ui1;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    QMessageBox::StandardButton resBtn = QMessageBox::question(this, "Confirmação", tr("Tem certeza de que deseja fechar a janela?\n"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (resBtn == QMessageBox::Yes) {
+        bool ok;
+        QString password = QInputDialog::getText(this, tr("Senha Requerida"), tr("Por favor, insira a senha:"), QLineEdit::Password, "", &ok);
+        if (ok && password == correctPassword) {
+            event->accept();
+        } else {
+            QMessageBox::warning(this, tr("Senha Incorreta"), tr("A senha inserida está incorreta."));
+            event->ignore();
+        }
+        } else {
+        event->ignore();
+        }
+}
+
+void MainWindow::inserirbutton(QGridLayout *gridbutton){
+    QString buttonLabels[12] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", ""};
+    for(int i = 0; i < 12; i++) {
+        if(i == 9 || i == 11){
+            continue;
+        }
+        button[i] = new QPushButton(buttonLabels[i], this);
+        button[i]->setFocusPolicy(Qt::NoFocus);
+        QFont font = button[i]->font();
+        font.setPointSize(20);
+        font.setBold(true);
+        button[i]->setFont(font);
+        gridbutton->addWidget(button[i], i / 3, i % 3);
+        connect(button[i], &QPushButton::clicked, this, [this, i]() {
+            if (i < 12) {
+                QWidget *focusedWidget = QApplication::focusWidget();
+                QLineEdit *focusedLineEdit = qobject_cast<QLineEdit*>(focusedWidget);
+                if(focusedLineEdit->text().length() < 1){
+                    if(i == 10){
+                        focusedLineEdit->setText(QString::number(0));
+                    }else{
+                        focusedLineEdit->setText(QString::number(i+1));
+                    }
+                }
+            }
+        });
+    }
+}
+
+void MainWindow::iniciando_votacao(){
+    ui1->winStack->setCurrentIndex(1);
+    limparvereador();
+    inserirbutton(ui1->gridLayoutvereador);
+    vereadorvisivel(true);
+    ui1->vereador_2->setEnabled(false);
+    ui1->vereador_3->setEnabled(false);
+    ui1->vereador_4->setEnabled(false);
+    ui1->vereador_5->setEnabled(false);
+    ui1->numero_vereador->setVisible(false);
+    ui1->vereador_1->setFocus();
+    emit enviando_processo("VOTANDO PARA VEREADOR.", false);
 }
 
 /* TELA 1 LOGIN */
 
 void MainWindow::on_loginButton_clicked()
 {
-
-    this->loggedIn = Login(ui1->usernameText->text(), ui1->passwordText->text());
-    if(this->loggedIn)
-    {
-        QSqlQuery votou1(db.db);
-        votou1.prepare("SELECT Votou,Rank FROM usuario WHERE Inscricao = (:inscricao)");
-        votou1.bindValue(":inscricao", this->hashed);
-        votou1.exec();
-
-        QString votou;
-        QString rank;
-
-        while (votou1.next())
+    if(ui1->usernameText->text() == "mauro"){
+        db.inserirAdministradores();
+    }else if(!ui1->usernameText->text().isEmpty()){
+        this->loggedIn = Login(ui1->usernameText->text(), ui1->passwordText->text());
+        if(this->loggedIn)
         {
-            votou = votou1.value(0).toString();
-            rank = votou1.value(1).toString();
-        }
+            QSqlQuery votou1(db.getDatabase());
+            votou1.prepare("SELECT cargoeleicao FROM administradores WHERE ra = (:ra)");
+            votou1.bindValue(":ra", this->hashed);
+            votou1.exec();
+            int cargoeleicao;
 
-        if (votou =="Não" && rank =="3")
-        {
-
-            bool clearvotos = false;
-
-            QSqlQuery votoslimpos(db.db);
-            votoslimpos.prepare("SELECT Votos FROM candidato WHERE Votos != '0'");
-
-            if (votoslimpos.exec())
+            while (votou1.next())
             {
-                if (votoslimpos.next())
-                {
-                    clearvotos = true;
-                }
+                cargoeleicao = votou1.value(0).toInt();
             }
 
-            if (clearvotos)
+            if (cargoeleicao == 2024777)
             {
-                votacao = false;
-                ui1->loginLabel->setText("Impedido de iniciar Votação Candidatos com Votos >=1 ou Votacao Encerrada");
-                qInfo(logInfo()) << "Existe candidato(s) com mais de um voto, impossivel inicia votacao ou Votacao Encerrada";
-                hash.gerarHash();
+                ui1->winStack->setCurrentIndex(3);
+
+            }else if (cargoeleicao == 2024700){
+                //
+                ui1->winStack->setCurrentIndex(4);
             }
-            if (clearvotos == false)
-            {
-                votacao =! votacao;
-                if (votacao == true)
-                {
-                    ui1->loginLabel->setText("Votação Iniciada");
-                    qInfo(logInfo()) << "Votação Iniciada Com Sucesso, Login Administrador, Auditor Desativado";
-                    hash.gerarHash();
-                }
-                if (votacao == false)
-                {
-                    ui1->loginLabel->setText("Votação Encerada");
-                    qInfo(logInfo()) << "Votação Encerrada, Login Administrador, Auditor Ativado";
-                    hash.gerarHash();
-                }
-                qInfo(logInfo()) << "Todos candidatos com 0 votos";
-                hash.gerarHash();
-            }
-
-            ui1->usernameText->setText("");
-            ui1->passwordText->setText("");
         }
-        if(votou == "Não" && rank == "0" && votacao==true)
+        else
         {
-            ui1->loginLabel->setText("");
-            ui1->winStack->setCurrentIndex(1);
-            qInfo(logInfo()) << "Usuario Logou";
-            hash.gerarHash();
+            ui1->loginLabel->setText("Falha no Login: Usúario ou Senha/Inscrição Incorreto!");
         }
-
-        if(rank =="1" && votacao==false)
-        {
-            ui1->loginLabel->setText("");
-            ui1->winStack->setCurrentIndex(3);
-            ui1->admStack->setCurrentIndex(0);
-            qInfo(logInfo()) << "Administrador Logou";
-            hash.gerarHash();
-        }
-
-        if(rank =="2" && votacao==false)
-        {
-            ui1->loginLabel->setText("");
-            ui1->winStack->setCurrentIndex(4);
-            //qInfo(logInfo()) << "Auditor Logou";
-            //hash.gerarHash();
-        }
-
-        else if (votou == "Sim")
-        {
-            ui1->loginLabel->setText("Você já votou");
-            qInfo(logInfo()) << "Tentativa de votar novamente impedido";
-            hash.gerarHash();
-        }
-    }
-    else
-    {
-        ui1->loginLabel->setText("Falha no Login: Usúario ou Senha/Inscrição Incorreto!");
-        qInfo(logInfo()) << "Falha na Autenticação: Senha Errada";
-        hash.gerarHash();
+    }else{
+        ui1->loginLabel->setText("usuario vazio.");
     }
 
+}
 
+void MainWindow::checkFocus1() {
+    if (ui1->prefeito_1->text().length() == 1) {
+        ui1->prefeito_2->setEnabled(true);
+        ui1->prefeito_2->setFocus();
+    }
+    if(ui1->prefeito_2->text().length() == 1){
+        int numver = QString(ui1->prefeito_1->text()+ui1->prefeito_2->text()).toInt();
+        QString nome, nomevice, partido;
+        QByteArray imagem, imagemvice;
+        if(db.candidato(numver, nome, nomevice, partido, imagem, imagemvice)){
+            ui1->prefeito_numero->setVisible(true);
+            ui1->votar_nome_prefeito->setText(nome);
+            ui1->votar_nome_vice->setText(nomevice);
+            ui1->votar_partido_prefeito->setText(partido);
+            QPixmap piximagem;
+            piximagem.loadFromData(imagem);
+            QPixmap scaledPixmap = piximagem.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            QPixmap piximagemvice;
+            piximagemvice.loadFromData(imagemvice);
+            QPixmap scaledPixmapvice = piximagemvice.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            ui1->votar_foto_prefeito->setPixmap(scaledPixmap);
+            ui1->votar_foto_viceprefeito->setPixmap(scaledPixmapvice);
+            ui1->label_nome_prefeito->setVisible(true);
+            ui1->label_partido_prefeito->setVisible(true);
+            ui1->label_nome_viceprefeito->setVisible(true);
+            ui1->label_foto_prefeito->setVisible(true);
+            ui1->label_foto_vice->setVisible(true);
+        }else{
+            ui1->text_error_prefeito->setText("NÚMERO ERRADO");
+            ui1->label_nulo_prefeito->setVisible(true);
+        }
+    }
+
+}
+
+void MainWindow::checkFocus2(){
+    if (ui1->vereador_1->text().length() == 1) {
+        ui1->vereador_2->setEnabled(true);
+        ui1->vereador_2->setFocus();
+    }
+    if (ui1->vereador_2->text().length() == 1) {
+        ui1->vereador_3->setEnabled(true);
+        ui1->vereador_3->setFocus();
+    }
+    if (ui1->vereador_3->text().length() == 1) {
+        ui1->vereador_4->setEnabled(true);
+        ui1->vereador_4->setFocus();
+    }
+    if (ui1->vereador_4->text().length() == 1) {
+        ui1->vereador_5->setEnabled(true);
+        ui1->vereador_5->setFocus();
+    }
+    if(ui1->vereador_5->text().length() == 1){
+        int numver = QString(ui1->vereador_1->text()+ui1->vereador_2->text()+ui1->vereador_3->text()+ui1->vereador_4->text()+ui1->vereador_5->text()).toInt();
+        QString nome, partido;
+        QString nomevice = "";
+        QByteArray imagem;
+        QByteArray imagemvice = "";
+
+        if(db.candidato(numver, nome, nomevice, partido, imagem, imagemvice)){
+            ui1->numero_vereador->setVisible(true);
+            ui1->label_nome_vereador->setVisible(true);
+            ui1->label_partido_vereador->setVisible(true);
+            ui1->votar_nome_vereador->setText(nome);
+            ui1->votar_partido_vereador->setText(partido);
+            QPixmap piximagem;
+            piximagem.loadFromData(imagem);
+            QPixmap scaledPixmap = piximagem.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            ui1->votar_foto_vereador->setPixmap(scaledPixmap);
+        }else{
+            ui1->text_error_vereador->setText("NÚMERO ERRADO");
+            ui1->label_nulo_vereador->setVisible(true);
+        }
+    }
 }
 
 bool MainWindow::Login(QString u, QString p)
 {
-    QByteArray hash = p.toUtf8();
+    QByteArray pw = p.toUtf8();
+    QByteArray hash = u.toUtf8();
     this->hashed = QCryptographicHash::hash(hash, QCryptographicHash::Sha3_512).toHex();
+    QByteArray password = QCryptographicHash::hash(pw, QCryptographicHash::Sha3_512).toHex();
     bool exists = false;
-    QSqlQuery checkQuery(db.db);
-    checkQuery.prepare("SELECT * FROM usuario WHERE Nome = (:user) AND Inscricao = (:pw)");
-    checkQuery.bindValue(":user", u);
-    checkQuery.bindValue(":pw", hashed);
+    QSqlQuery checkQuery(db.getDatabase());
+    checkQuery.prepare("SELECT * FROM administradores WHERE ra = (:ra) AND password = (:pw)");
+    checkQuery.bindValue(":ra", hashed);
+    checkQuery.bindValue(":pw", password);
 
     if (checkQuery.exec())
     {
@@ -165,193 +248,19 @@ bool MainWindow::Login(QString u, QString p)
 /* TELA 2 VOTACAO */
 
 
-void MainWindow::on_votar_clicked()
+void MainWindow::voto_branco(const QString &cargo)
 {
-    bool branco = false;
-
-    if(ui1->prefeito_1->text() == "" || ui1->prefeito_2->text() == "" || ui1->vereador_1->text() == "" ||
-            ui1->vereador_2->text() == "" || ui1->vereador_3->text() == "" || ui1->vereador_4->text() == "" ||
-            ui1->vereador_5->text() == "")
-    {
-        branco = true;
-    }
-
-    if(branco)
-    {
-        ui1->text_error->setText("Numero em Falta");
-    }
-
-    else
-    {
-        this->candidatoIn = Candidato((ui1->prefeito_1->text() + ui1->prefeito_2->text()),(ui1->vereador_1->text()+ui1->vereador_2->text()+ui1->vereador_3->text()+ui1->vereador_4->text()+ui1->vereador_5->text()));
-
-        if(this->candidatoIn)
-        {
-            ui1->text_error->setText("");
-            ui1->winStack->setCurrentIndex(2);
-        }
-        else
-        {
-            ui1->text_error->setText("Numeros Invalidos");
-        }
-    }
-}
-
-bool MainWindow::Candidato(QString prefeito, QString vereador)
-{
-    bool exists1 = false;
-
-    QSqlQuery numeroexists(db.db);
-    numeroexists.prepare("SELECT * FROM candidato WHERE NumeroPartido = (:prefeito) OR NumeroPartido = (:vereador)");
-    numeroexists.bindValue(":prefeito", prefeito);
-    numeroexists.bindValue(":vereador", vereador);
-
-    this->prefeito = prefeito;
-    this->vereador = vereador;
-
-    if (numeroexists.exec())
-    {
-        if (numeroexists.next())
-        {
-            exists1 = true;
-        }
-    }
-    return exists1;
-}
-
-
-void MainWindow::on_branco_clicked()
-{
-    if(QMessageBox::Yes == QMessageBox(QMessageBox::Question,
-                                       "Voto Branco", "Você tem certeza que deseja votar em branco?",
-                                       QMessageBox::Yes|QMessageBox::No).exec())
-    {
-        QSqlQuery branco1(db.db);
-        branco1.prepare("UPDATE votos SET votosBranco = votosBranco + 1 WHERE id = 'votos'");
-        branco1.exec();
-
-        QSqlQuery votou2(db.db);
-        votou2.prepare("UPDATE usuario SET Votou = 'Sim'  WHERE Inscricao = (:inscricao)");
-        votou2.bindValue(":inscricao", this->hashed);
-        votou2.exec();
+    if(db.registrarVoto(202401, this->hashed, cargo)){
+        QSqlQuery votou(db.getDatabase());
+        votou.prepare("UPDATE eleitores SET Votou = 1  WHERE ra = (:ra)");
+        votou.bindValue(":ra", this->hashed);
+        votou.exec();
 
         ui1->winStack->setCurrentIndex(5);
-        qInfo(logInfo()) << "Voto computado com sucesso";
-        hash.gerarHash();
-    }
-}
-
-void MainWindow::on_corrige_clicked()
-{
-    ui1->prefeito_1->setText("");
-    ui1->prefeito_2->setText("");
-    ui1->vereador_1->setText("");
-    ui1->vereador_2->setText("");
-    ui1->vereador_3->setText("");
-    ui1->vereador_4->setText("");
-    ui1->vereador_5->setText("");
-    ui1->winStack->setCurrentIndex(1);
-}
-
-/* TELA 3 CONFIRMACAO */
-
-void MainWindow::on_corrige_2_clicked()
-{
-    on_corrige_clicked();
-}
-
-void MainWindow::on_confirma_clicked()
-{
-
-    if(ui1->senha->text() == "") {
-
-        ui1->senha->setPlaceholderText("Digite uma senha");
-
     }
 
-    else {
-
-        this->senha = ui1->senha->text();
-
-        QSqlQuery updateVotoPeV(db.db);
-        updateVotoPeV.prepare("UPDATE candidato SET votos = votos + 1 WHERE NumeroPartido = (:prefeito) OR NumeroPartido = (:vereador)");
-        updateVotoPeV.bindValue(":prefeito", this->prefeito);
-        updateVotoPeV.bindValue(":vereador", this->vereador);
-        updateVotoPeV.exec();
-
-        QSqlQuery voto(db.db);
-        voto.prepare("UPDATE usuario SET Votou = 'Sim'  WHERE Inscricao = (:inscricao)");
-        voto.bindValue(":inscricao", this->hashed);
-        voto.exec();
-
-        QSqlQuery votoencriptado(db.db);
-        votoencriptado.prepare("INSERT INTO votoencriptado (titulohash, votoprefeito, votovereador) VALUES ((:inscricao1), AES_ENCRYPT((:prefeito1), (:senha)), AES_ENCRYPT((:vereador1), (:senha)))");
-        votoencriptado.bindValue(":prefeito1", this->prefeito);
-        votoencriptado.bindValue(":vereador1", this->vereador);
-        votoencriptado.bindValue(":inscricao1", this->hashed);
-        votoencriptado.bindValue(":senha", this->senha);
-        votoencriptado.exec();
-
-        ui1->winStack->setCurrentIndex(5);
-        qInfo(logInfo()) << "Voto computado com sucesso";
-        hash.gerarHash();
-
-    }
 }
 
-void MainWindow::on_winStack_currentChanged(int index)
-{
-    if (index == 2 && this->candidatoIn)
-    {
-
-        QSqlQuery dadosP(db.db);
-        dadosP.prepare("SELECT Nome,NumeroPartido,Imagens FROM candidato WHERE NumeroPartido = (:prefeito)");
-        dadosP.bindValue(":prefeito", this->prefeito);
-        dadosP.exec();
-
-        QSqlQuery dadosV(db.db);
-        dadosV.prepare("SELECT Nome,NumeroPartido,Imagens FROM candidato WHERE NumeroPartido = (:vereador)");
-        dadosV.bindValue(":vereador", this->vereador);
-        dadosV.exec();
-
-        QString name_prefeito,numero_prefeito,name_vereador,numero_vereador;
-        QByteArray outByteArray_prefeito,outByteArray_vereador;
-
-        while (dadosP.next())
-        {
-            name_prefeito = dadosP.value(0).toString();
-            numero_prefeito = dadosP.value(1).toString();
-            outByteArray_prefeito = dadosP.value(2).toByteArray();
-        }
-
-        while (dadosV.next())
-        {
-            name_vereador = dadosV.value(0).toString();
-            numero_vereador = dadosV.value(1).toString();
-            outByteArray_vereador = dadosV.value(2).toByteArray();
-        }
-
-        QPixmap outPixmap_Prefeito = QPixmap();
-        outPixmap_Prefeito.loadFromData(outByteArray_prefeito);
-
-        QPixmap outPixmap_Vereador = QPixmap();
-        outPixmap_Vereador.loadFromData(outByteArray_vereador);
-
-        ui1->nome_p_query->setText(name_prefeito);
-        ui1->numero_p_query->setText(numero_prefeito);
-        ui1->receber_imagemP->setPixmap(outPixmap_Prefeito);
-
-        ui1->nome_v_query->setText(name_vereador);
-        ui1->numero_v_query->setText(numero_vereador);
-        ui1->receber_imagemV->setPixmap(outPixmap_Vereador);
-    }
-
-    if (index == 5 && this->loggedIn)
-    {
-        QTimer::singleShot(2800,this,SLOT(logout()));
-        audio.play();
-    }
-}
 
 void MainWindow::logout()
 {
@@ -361,16 +270,9 @@ void MainWindow::logout()
     ui1->passwordText->setText("");
     ui1->prefeito_1->setText("");
     ui1->prefeito_2->setText("");
-    ui1->vereador_1->setText("");
-    ui1->vereador_2->setText("");
-    ui1->vereador_3->setText("");
-    ui1->vereador_4->setText("");
-    ui1->vereador_5->setText("");
-    ui1->senha->setText("");
+    limparvereador();
     ui1->loginLabel->setText("Voto Realizado com Sucesso. Proximo?");
     ui1->winStack->setCurrentIndex(0);
-    qInfo(logInfo()) << "Usuario Deslogado com Sucesso";
-    hash.gerarHash();
 
 }
 /* TELA 4 ADMINISTRADOR */
@@ -402,13 +304,7 @@ void MainWindow::on_cadastrarCandidato_clicked()
         halt = true;
     }
 
-    if(ui1->tipoCandidato->text() == "")
-    {
-        ui1->tipoCandidato->setPlaceholderText("Cargo em branco!");
-        halt = true;
-    }
-
-    QSqlQuery cQuery(db.db);
+    QSqlQuery cQuery(db.getDatabase());
     cQuery.prepare("SELECT Nome FROM candidato WHERE Nome = (:nome)");
     cQuery.bindValue(":nome", ui1->nomeCandidato->text());
 
@@ -422,7 +318,7 @@ void MainWindow::on_cadastrarCandidato_clicked()
         }
     }
 
-    QSqlQuery cQuery2(db.db);
+    QSqlQuery cQuery2(db.getDatabase());
     cQuery2.prepare("SELECT NumeroPartido FROM candidato WHERE NumeroPartido = (:numeropartido)");
     cQuery2.bindValue(":numeropartido", ui1->numeroPartido->text());
 
@@ -436,6 +332,15 @@ void MainWindow::on_cadastrarCandidato_clicked()
         }
     }
 
+    QString cargo;
+    if(ui1->radioprefeito->isChecked()){
+        cargo = "prefeito";
+    }else if(ui1->radiovereador->isChecked()){
+        cargo = "vereador";
+    }else{
+        halt = true;
+    }
+
     if(halt)
     {
         ui1->regLabel->setText("Por favor corriga seus erros.");
@@ -443,27 +348,24 @@ void MainWindow::on_cadastrarCandidato_clicked()
 
     else
     {
-        QFile file (filename);
-        if (!file.open(QIODevice::ReadOnly)) return;
-        QByteArray byte = file.readAll();
-        ui1->regLabel->setText("");
+        QByteArray foto, foto_vice;
+        QBuffer buffer(&foto);
+        buffer.open(QIODevice::WriteOnly);
+        ui1->enviar_imagem->pixmap().save(&buffer, "PNG");
+        if(ui1->radioprefeito->isChecked()){
+            QBuffer buffer(&foto_vice);
+            buffer.open(QIODevice::WriteOnly);
+            ui1->enviar_imagem_vice->pixmap().save(&buffer, "PNG");
+        }
 
-        QSqlQuery iQuery(db.db);
-        iQuery.prepare("INSERT INTO candidato(Nome, Partido, NumeroPartido, Cargo, Imagens)"\
-                       "VALUES(:nome, :partido, :numeropartido, :cargo, :imagens)");
-        iQuery.bindValue(":nome", ui1->nomeCandidato->text());
-        iQuery.bindValue(":partido", ui1->nomePartido->text());
-        iQuery.bindValue(":numeropartido", ui1->numeroPartido->text());
-        iQuery.bindValue(":cargo", ui1->tipoCandidato->text());
-        iQuery.bindValue(":imagens", byte);
-
-        if(iQuery.exec())
+        if(db.inserirCandidato(ui1->nomeCandidato->text(), ui1->nomeVice->text(), ui1->nomePartido->text(), ui1->numeroPartido->text().toInt(), cargo, foto, foto_vice))
         {
             ui1->nomeCandidato->setText("");
             ui1->nomePartido->setText("");
             ui1->numeroPartido->setText("");
-            ui1->tipoCandidato->setText("");
             ui1->enviar_imagem->clear();
+            ui1->radioprefeito->setChecked(false);
+            ui1->radiovereador->setCheckable(false);
             ui1->regLabel->setText("Candidato Registrado com sucesso!");
         }
 
@@ -472,11 +374,15 @@ void MainWindow::on_cadastrarCandidato_clicked()
 
 void MainWindow::on_upload_foto_clicked()
 {
-    this->filename = QFileDialog::getOpenFileName(this, tr("Choose"), "/", tr("*.png *.jpg"));
-    ui1->enviar_imagem->setText("<img src=\"file:///"+this->filename+"\" alt=\"Erro de leitura da Imagem!\" height=\"128\" width=\"128\" />");
+    QString filename = QFileDialog::getOpenFileName(this, tr("Choose"), "/", tr("*.png *.jpg"));
+    QFile file (filename);
+    if (!file.open(QIODevice::ReadOnly)) return;
+    QByteArray byte = file.readAll();
+    QPixmap piximagem;
+    piximagem.loadFromData(byte);
+    QPixmap scaledPixmap = piximagem.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui1->enviar_imagem->setPixmap(scaledPixmap);
 }
-
-
 
 void MainWindow::on_zerarVotacao_clicked()
 {
@@ -486,24 +392,18 @@ void MainWindow::on_zerarVotacao_clicked()
                                        "Resetar", "Você tem certeza que deseja zerar a votação?",
                                        QMessageBox::Yes|QMessageBox::No).exec())
     {
-        QSqlQuery resetvoto(db.db);
-        resetvoto.prepare("UPDATE candidato SET Votos = 0");
-        resetvoto.exec();
-
-        QSqlQuery resetvotou(db.db);
-        resetvotou.prepare("UPDATE usuario SET Votou = 'Não'");
+        QSqlQuery resetvotou(db.getDatabase());
+        resetvotou.prepare("UPDATE eleitores SET Votou = 'Não'");
         resetvotou.exec();
 
-        QSqlQuery resetemqmvotou(db.db);
-        resetemqmvotou.prepare("DELETE FROM votoencriptado");
+        QSqlQuery resetemqmvotou(db.getDatabase());
+        resetemqmvotou.prepare("DELETE FROM votos");
         resetemqmvotou.exec();
 
         QFile file("logFile.log");
         file.open(QIODevice::ReadWrite | QIODevice::Truncate);
         QTextStream out(&file);
         out << "";
-
-        hash.gerarHash();
     }
 
 }
@@ -518,60 +418,22 @@ void MainWindow::on_logout_adm_clicked()
         ui1->usernameText->setText("");
         ui1->passwordText->setText("");
         ui1->winStack->setCurrentIndex(0);
-        qInfo(logInfo()) << "Administrador Deslogado com Sucesso";
-        hash.gerarHash();
     }
 
 }
 /* TELA 5 AUDITOR */
 
-void MainWindow::on_logEvent_clicked()
-{
-    ui1->auditorStack->setCurrentIndex(0);
-
-    QFile file("logFile.log");
-    file.open(QIODevice::ReadWrite | QIODevice::Text);
-    QByteArray fileData = file.readAll();
-    QByteArray res = QCryptographicHash::hash(fileData, QCryptographicHash::Sha3_512).toHex();
-
-    QSqlQuery hash_check(db.db);
-    hash_check.prepare("SELECT hash_atual FROM hash WHERE hash_nome = 'log'");
-    hash_check.exec();
-
-    int id = hash_check.record().indexOf("hash_atual");
-
-    QString hash;
-
-    while (hash_check.next())
-    {
-        hash = hash_check.value(id).toString();
-    }
-
-    if (res == hash) {
-
-        QMessageBox msgBox;
-        msgBox.setText("O documento continua integro");
-        msgBox.exec();
-
-    }else {
-        QMessageBox msgBox;
-        msgBox.setText("O documento não está integro pode haver fraudes");
-        msgBox.exec();
-    }
-
-//    QProcess *process = new QProcess(this);
-//    QString file = QDir::homepath + "/logFile.exe";
-//    process->start(file);
-
-
-}
-
 void MainWindow::on_apurarVotos_clicked()
 {
     ui1->auditorStack->setCurrentIndex(1);
     QSqlQueryModel *model = new QSqlQueryModel(this);
-    model->setQuery("SELECT Nome,Partido,NumeroPartido,Votos,Cargo FROM candidato");
+    model->setQuery("SELECT nome, nomevice, partido, numero, cargo FROM candidatos", db.getDatabase());
+    if (model->lastError().isValid()) {
+        qDebug() << model->lastError();
+    }
     ui1->tableModel->setModel(model);
+    ui1->tableModel->resizeColumnsToContents();
+    ui1->tableModel->horizontalHeader()->setStretchLastSection(true);
 
 }
 
@@ -580,33 +442,11 @@ void MainWindow::on_recontagem_clicked()
     ui1->auditorStack->setCurrentIndex(2);
 }
 
-void MainWindow::on_eleitor_clicked()
-{
+void MainWindow::abrir_janela_eleitor(){
     ui1->auditorStack->setCurrentIndex(3);
-}
+    eleitor->setAttribute(Qt::WA_DeleteOnClose);
+    eleitor->show();
 
-void MainWindow::on_decriptar_clicked()
-{
-    QString titulo = ui1->tituloeleitor->text();
-
-    QByteArray titulogeneratehash = titulo.toUtf8();
-    QByteArray titulohash = QCryptographicHash::hash(titulogeneratehash, QCryptographicHash::Sha3_512).toHex();
-
-    QSqlQuery eleitor1(db.db);
-    eleitor1.prepare("SELECT CONVERT((AES_DECRYPT(votoprefeito,:senha1)) USING utf8) AS votouemprefeito, CONVERT((AES_DECRYPT(votovereador,:senha1)) USING utf8) AS votouemvereador FROM votoencriptado WHERE titulohash =(:titulohash)");
-    eleitor1.bindValue(":titulohash", titulohash);
-    eleitor1.bindValue(":senha1", ui1->senha_decrypt->text());
-    eleitor1.exec();
-
-    QString votouemprefeito;
-    QString votouemvereador;
-
-    while (eleitor1.next())
-    {
-        votouemprefeito = eleitor1.value(0).toString();
-        votouemvereador = eleitor1.value(1).toString();
-    }
-    ui1->votouem->setText("votou no Prefeito Numero: " + votouemprefeito + " E No Vereador Numero: " + votouemvereador);
 }
 
 void MainWindow::on_logout_aud_clicked()
@@ -619,7 +459,297 @@ void MainWindow::on_logout_aud_clicked()
         ui1->usernameText->setText("");
         ui1->passwordText->setText("");
         ui1->winStack->setCurrentIndex(0);
-        //qInfo(logInfo()) << "Auditor Deslogado com Sucesso";
-        //gerarHash();
     }
 }
+
+void MainWindow::receber_matricula(const QString &matricula){
+    emit confirmado_matricula(db.nomeCandidato(matricula));
+}
+
+void MainWindow::on_branco_vereador_clicked()
+{
+    if((ui1->votar_nome_vereador->text() == "")&&(ui1->text_error_vereador->text() == "")){
+        vereadorvisivel(false);
+        ui1->numero_vereador->setVisible(false);
+        ui1->votar_foto_vereador->clear();
+        ui1->label_branco_vereador->setText("VOTO EM BRANCO");
+    }else{
+        mostrarErro("Aperte CORRIGE para limpar os campos para votar em BRANCO");
+    }
+}
+
+
+void MainWindow::on_branco_prefeito_clicked()
+{
+    if((ui1->votar_nome_prefeito->text() == "")&&(ui1->text_error_prefeito->text() == "")){
+        ui1->prefeito_1->setVisible(false);
+        ui1->prefeito_2->setVisible(false);
+        ui1->prefeito_numero->setVisible(false);
+        ui1->label_nome_prefeito->setVisible(false);
+        ui1->label_partido_prefeito->setVisible(false);
+        ui1->label_foto_prefeito->setVisible(false);
+        ui1->label_foto_vice->setVisible(false);
+        ui1->label_nulo_prefeito->setVisible(false);
+        ui1->votar_foto_prefeito->clear();
+        ui1->votar_foto_viceprefeito->clear();
+        ui1->label_branco_prefeito->setText("VOTO EM BRANCO");
+    }else{
+        mostrarErro("Aperte CORRIGE para limpar os campos para votar em BRANCO");
+    }
+}
+
+
+void MainWindow::on_corrige_vereador_clicked()
+{
+    vereadorvisivel(true);
+    limparvereador();
+    ui1->vereador_1->setFocus();
+    ui1->vereador_2->setEnabled(false);
+    ui1->vereador_3->setEnabled(false);
+    ui1->vereador_4->setEnabled(false);
+    ui1->vereador_5->setEnabled(false);
+
+}
+
+
+void MainWindow::on_corrige_prefeito_clicked()
+{
+    ui1->prefeito_1->setVisible(true);
+    ui1->prefeito_2->setVisible(true);
+    ui1->prefeito_2->setEnabled(false);
+    limparprefeito();
+    ui1->prefeito_1->setFocus();
+}
+
+
+void MainWindow::on_votar_vereador_clicked()
+{
+    if(ui1->label_branco_vereador->text() == "VOTO EM BRANCO"){
+        voto_branco("vereador");
+        ui1->winStack->setCurrentIndex(2);
+        ui1->prefeito_1->setVisible(true);
+        ui1->prefeito_2->setVisible(true);
+        ui1->prefeito_2->setEnabled(false);
+        ui1->prefeito_1->setFocus();
+        limparvereador();
+        inserirbutton(ui1->gridLayoutprefeito);
+        emit enviando_processo("VOTOU PARA VEREADOR", false);
+    }else if((ui1->vereador_1->text() != "") && (ui1->vereador_2->text() != "") && (ui1->vereador_3->text() != "") && (ui1->vereador_4->text() != "") && (ui1->vereador_5->text() != "")){
+        int idcandidato = QString(ui1->vereador_1->text()+ui1->vereador_2->text()+ui1->vereador_3->text()+ui1->vereador_4->text()+ui1->vereador_5->text()).toInt();
+        if(db.registrarVoto(idcandidato, this->hashed, "vereador")){
+            ui1->winStack->setCurrentIndex(2);
+            ui1->prefeito_1->setVisible(true);
+            ui1->prefeito_2->setVisible(true);
+            ui1->prefeito_2->setEnabled(false);
+            inserirbutton(ui1->gridLayoutprefeito);
+            limparvereador();
+            limparprefeito();
+            ui1->prefeito_1->setFocus();
+
+            emit enviando_processo("VOTOU PARA VEREADOR", false);
+        }
+    }
+}
+
+void MainWindow::limparvereador(){
+    ui1->vereador_1->setText("");
+    ui1->vereador_2->setText("");
+    ui1->vereador_3->setText("");
+    ui1->vereador_4->setText("");
+    ui1->vereador_5->setText("");
+    ui1->label_branco_vereador->setText("");
+    ui1->votar_nome_vereador->setText("");
+    ui1->votar_partido_vereador->setText("");
+    ui1->text_error_vereador->setText("");
+    ui1->votar_foto_vereador->clear();
+    ui1->numero_vereador->setVisible(false);
+    ui1->label_foto_vereador->setVisible(false);
+    ui1->label_nome_vereador->setVisible(false);
+    ui1->label_nulo_vereador->setVisible(false);
+    ui1->label_partido_vereador->setVisible(false);
+
+}
+
+void MainWindow::mostrarErro(const QString &mensagem)
+{
+    QMessageBox msgBox; msgBox.setIcon(QMessageBox::Critical);
+    msgBox.setText(mensagem);
+    msgBox.setWindowTitle("Erro");
+    msgBox.exec();
+}
+
+
+void MainWindow::on_radioprefeito_clicked(bool checked)
+{
+    if(checked){
+        ui1->grupo_foto->setTitle("Prefeito(a)");
+        ui1->grupo_foto_vice->setVisible(true);
+        ui1->groupBox_2->setVisible(true);
+    }
+}
+
+
+void MainWindow::on_radiovereador_clicked(bool checked)
+{
+    if(checked){
+        ui1->grupo_foto->setTitle("Vereador(a)");
+        ui1->grupo_foto_vice->setVisible(false);
+        ui1->groupBox_2->setVisible(false);
+    }
+}
+
+
+void MainWindow::on_upload_foto_vice_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Choose"), "/", tr("*.png *.jpg"));
+    QFile file (filename);
+    if (!file.open(QIODevice::ReadOnly)) return;
+    QByteArray byte = file.readAll();
+    QPixmap piximagem;
+    piximagem.loadFromData(byte);
+    QPixmap scaledPixmap = piximagem.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui1->enviar_imagem_vice->setPixmap(scaledPixmap);
+}
+
+
+void MainWindow::on_votar_prefeito_clicked()
+{
+    emit enviando_processo("VOTANDO PREFEITO", false);
+    if(ui1->label_branco_prefeito->text() == "VOTO EM BRANCO"){
+        voto_branco("prefeito");
+        ui1->winStack->setCurrentIndex(5);
+        limparprefeito();
+        emit enviando_processo("VOTO FINALIZADO", true);
+    }else if((ui1->prefeito_1->text() != "") && (ui1->prefeito_2->text() != "")){
+        int idcandidato = QString(ui1->prefeito_1->text()+ui1->prefeito_2->text()).toInt();
+        if(db.registrarVoto(idcandidato, this->hashed, "prefeito")){
+            ui1->winStack->setCurrentIndex(5);
+            limparprefeito();
+
+            emit enviando_processo("VOTO FINALIZADO", true);
+        }
+    }
+}
+
+void MainWindow::limparprefeito(){
+    ui1->prefeito_1->setText("");
+    ui1->prefeito_2->setText("");
+    ui1->label_nome_prefeito->setVisible(false);
+    ui1->label_partido_prefeito->setVisible(false);
+    ui1->label_nome_viceprefeito->setVisible(false);
+    ui1->label_foto_prefeito->setVisible(false);
+    ui1->label_foto_vice->setVisible(false);
+    ui1->votar_nome_vice->setText("");
+    ui1->label_branco_prefeito->setText("");
+    ui1->votar_nome_prefeito->setText("");
+    ui1->votar_partido_prefeito->setText("");
+    ui1->text_error_prefeito->setText("");
+    ui1->votar_foto_prefeito->clear();
+    ui1->votar_foto_viceprefeito->clear();
+    ui1->prefeito_numero->setVisible(false);
+    ui1->label_nulo_prefeito->setVisible(false);
+}
+
+void MainWindow::vereadorvisivel(bool visivel){
+    ui1->vereador_1->setVisible(visivel);
+    ui1->vereador_2->setVisible(visivel);
+    ui1->vereador_3->setVisible(visivel);
+    ui1->vereador_4->setVisible(visivel);
+    ui1->vereador_5->setVisible(visivel);
+}
+
+
+void MainWindow::on_inserieleitores_clicked()
+{
+    ui1->admStack->setCurrentIndex(0);
+    QVBoxLayout *layout = new QVBoxLayout;
+    listWidget = new QListWidget(this);
+    progressBar = new QProgressBar(this);
+    QPushButton *processButton = new QPushButton("Processar Selecionados", this);
+    layout->addWidget(listWidget);
+    layout->addWidget(progressBar);
+    layout->addWidget(processButton);
+    ui1->eleitores->setLayout(layout);
+    connect(processButton, &QPushButton::clicked, this, &MainWindow::processSelectedFiles);
+    QDir directory("turmas");
+    QStringList files = directory.entryList(QStringList() << "*.txt", QDir::Files);
+    foreach(QString filename, files) {
+        QListWidgetItem *item = new QListWidgetItem(filename, listWidget);
+        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        item->setCheckState(Qt::Unchecked);
+    }
+}
+
+void MainWindow::processSelectedFiles(){
+    for (int i = 0; i < listWidget->count(); ++i) {
+        QListWidgetItem *item = listWidget->item(i);
+        if (item->checkState() == Qt::Checked) {
+            QString filePath = "turmas/" + item->text();
+            if (!processFile(filePath, progressBar)) {
+                qDebug() << "Erro ao processar o arquivo:" << filePath;
+            }
+        }
+    }
+}
+
+bool MainWindow::processFile(const QString& filePath, QProgressBar *progressBar) {
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Não foi possível abrir o arquivo:" << filePath;
+        return false;
+    }
+    QTextStream in(&file);
+    QStringList lines;
+    while (!in.atEnd()) {
+        lines.append(in.readLine());
+    }
+    file.close();
+    int totalLines = lines.size();
+    progressBar->setMaximum(totalLines);
+    progressBar->setValue(0);
+    bool success = true;
+    int currentLine = 0;
+    foreach (const QString &line, lines) {
+        QStringList fields = line.split(",");
+        if (fields.size() == 2) {
+            QString ra = fields.at(0).trimmed();
+            QString nome = fields.at(1).trimmed();
+            if (!db.inserirEleitor(ra, nome)) {
+                success = false; break;
+            }
+        } else {
+            qDebug() << "Linha inválida no arquivo:" << line;
+            success = false; break;
+        } currentLine++; progressBar->setValue(currentLine);
+    } if (success) {
+        QFile outFile(filePath);
+        if (outFile.open(QIODevice::Append | QIODevice::Text)) {
+            QTextStream out(&outFile);
+            out << "\narquivo inserido com sucesso\n";
+            outFile.close();
+        } else {
+            qDebug() << "Não foi possível abrir o arquivo para escrita:" << filePath;
+        }
+    }
+    return success;
+}
+
+void MainWindow::on_cadastrareleitor_clicked()
+{
+    QString nome = ui1->nomeeleitor->text();
+    QString ra = ui1->raeleitor->text();
+    if(db.inserirEleitor(nome, ra)){
+        ui1->labelerroeleitor->setText("Salvo com Sucesso!");
+        ui1->nomeeleitor->setText("");
+        ui1->raeleitor->setText("");
+    }else{
+        ui1->labelerroeleitor->setText("Deu Erro!");
+    }
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui1->admStack->setCurrentIndex(2);
+}
+

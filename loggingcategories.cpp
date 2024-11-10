@@ -1,4 +1,4 @@
-#include "LoggingCategories.h"
+#include "loggingcategories.h"
 
 Q_LOGGING_CATEGORY(logInfo,     "Info")
 

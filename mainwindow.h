@@ -5,7 +5,6 @@
 #include <QApplication>
 #include <QDebug>
 #include <QSqlRecord>
-#include <QSqlTableModel>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTimer>
@@ -23,7 +22,15 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QLoggingCategory>
-#include "loggingcategories.h"
+#include "bancodedados.h"
+#include <QLineEdit>
+#include <QBuffer>
+#include <QGridLayout>
+#include <QSqlError>
+#include <QSqlQueryModel>
+#include "eleitor.h"
+#include <QListWidget>
+#include <QProgressBar>
 
 namespace Ui {
 class MainWindow;
@@ -34,7 +41,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent= 0);
+    explicit MainWindow(QSqlDatabase db, QWidget *parent= 0);
     ~MainWindow();
 
     bool loggedIn;
@@ -42,11 +49,9 @@ public:
     bool candidatoIn;
     bool votacao = false;
     bool Login(QString u, QString p);
-    bool Candidato(QString prefeito, QString vereador);
 
-    QString filename;
-    QString file;
-    QSqlTableModel *tableModel;
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 public slots:
 
@@ -55,18 +60,6 @@ private slots:
     void logout();
 
     void on_loginButton_clicked();
-
-    void on_votar_clicked();
-
-    void on_corrige_clicked();
-
-    void on_corrige_2_clicked();
-
-    void on_confirma_clicked();
-    
-    void on_winStack_currentChanged(int index);
-
-    void on_branco_clicked();
 
     void on_zerarVotacao_clicked();
 
@@ -78,28 +71,85 @@ private slots:
 
     void on_cadastrarCandidato_clicked();
 
-    void on_logEvent_clicked();
-
     void on_upload_foto_clicked();
 
     void on_logout_aud_clicked();
 
-    void on_eleitor_clicked();
-
-
-    void on_decriptar_clicked();
-
     void on_recontagem_clicked();
+
+    void checkFocus1();
+
+    void checkFocus2();
+
+    void on_branco_vereador_clicked();
+
+    void on_branco_prefeito_clicked();
+
+    void on_corrige_vereador_clicked();
+
+    void on_corrige_prefeito_clicked();
+
+    void on_votar_vereador_clicked();
+
+    void mostrarErro(const QString &mensagem);
+
+    void on_radioprefeito_clicked(bool checked);
+
+    void on_radiovereador_clicked(bool checked);
+
+    void on_upload_foto_vice_clicked();
+
+    void on_votar_prefeito_clicked();
+
+    void receber_matricula(const QString &matricula);
+
+    void abrir_janela_eleitor();
+
+    void iniciando_votacao();
+
+    void on_inserieleitores_clicked();
+
+    void processSelectedFiles();
+
+    void on_cadastrareleitor_clicked();
+
+    void on_pushButton_clicked();
+
+signals:
+    void enviando_processo(const QString &processo, bool terminou);
+
+    void confirmado_matricula(const QString &nome);
 
 private:
     Ui::MainWindow      *ui1;
-    QString             prefeito;
-    QString             vereador;
     QString             inscricao;
     QString             senha;
     QString             senhadecrypt;
     QByteArray          hashed;
-    QTimer              *timer;
+
+    Bancodedados db;
+
+    void voto_branco(const QString &cargo);
+
+    void limparvereador();
+
+    void limparprefeito();
+
+    QPushButton *button[9];
+
+    void inserirbutton(QGridLayout *gridbutton);
+
+    Eleitor *eleitor;
+
+    void vereadorvisivel(bool visivel);
+
+    QString correctPassword = "somenteeumace";
+
+    QListWidget *listWidget;
+
+    QProgressBar *progressBar;
+
+    bool processFile(const QString& filePath, QProgressBar *progressBar);
 };
 
 #endif // MAINWINDOW_H

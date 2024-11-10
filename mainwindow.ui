@@ -3,7 +3,7 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="enabled">
    <bool>true</bool>
@@ -54,10 +54,10 @@
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Shadow::Raised</enum>
     </property>
    </widget>
    <widget class="QStackedWidget" name="winStack">
@@ -86,10 +86,10 @@
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLineEdit" name="usernameText">
        <property name="geometry">
@@ -157,6 +157,15 @@
             </color>
            </brush>
           </colorrole>
+          <colorrole role="PlaceholderText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="128">
+             <red>254</red>
+             <green>254</green>
+             <blue>254</blue>
+            </color>
+           </brush>
+          </colorrole>
          </active>
          <inactive>
           <colorrole role="WindowText">
@@ -210,6 +219,15 @@
              <red>51</red>
              <green>51</green>
              <blue>51</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="PlaceholderText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="128">
+             <red>254</red>
+             <green>254</green>
+             <blue>254</blue>
             </color>
            </brush>
           </colorrole>
@@ -269,6 +287,15 @@
             </color>
            </brush>
           </colorrole>
+          <colorrole role="PlaceholderText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="128">
+             <red>254</red>
+             <green>254</green>
+             <blue>254</blue>
+            </color>
+           </brush>
+          </colorrole>
          </disabled>
         </palette>
        </property>
@@ -277,8 +304,11 @@
          <kerning>true</kerning>
         </font>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">padding-left: 20px;
@@ -366,6 +396,15 @@ color: #fefefe;</string>
             </color>
            </brush>
           </colorrole>
+          <colorrole role="PlaceholderText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="128">
+             <red>254</red>
+             <green>254</green>
+             <blue>254</blue>
+            </color>
+           </brush>
+          </colorrole>
          </active>
          <inactive>
           <colorrole role="WindowText">
@@ -419,6 +458,15 @@ color: #fefefe;</string>
              <red>51</red>
              <green>51</green>
              <blue>51</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="PlaceholderText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="128">
+             <red>254</red>
+             <green>254</green>
+             <blue>254</blue>
             </color>
            </brush>
           </colorrole>
@@ -478,6 +526,15 @@ color: #fefefe;</string>
             </color>
            </brush>
           </colorrole>
+          <colorrole role="PlaceholderText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="128">
+             <red>254</red>
+             <green>254</green>
+             <blue>254</blue>
+            </color>
+           </brush>
+          </colorrole>
          </disabled>
         </palette>
        </property>
@@ -487,7 +544,7 @@ color: #fefefe;</string>
         </font>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">padding-left: 20px;
@@ -497,7 +554,7 @@ background: #333;
 color: #fefefe;</string>
        </property>
        <property name="inputMethodHints">
-        <set>Qt::ImhHiddenText|Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
+        <set>Qt::InputMethodHint::ImhHiddenText|Qt::InputMethodHint::ImhNoAutoUppercase|Qt::InputMethodHint::ImhNoPredictiveText|Qt::InputMethodHint::ImhSensitiveData</set>
        </property>
        <property name="inputMask">
         <string/>
@@ -509,7 +566,7 @@ color: #fefefe;</string>
         <bool>false</bool>
        </property>
        <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
+        <enum>QLineEdit::EchoMode::Password</enum>
        </property>
        <property name="cursorPosition">
         <number>0</number>
@@ -543,29 +600,13 @@ Color: #fefefe;</string>
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QLabel" name="brazel">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>901</width>
-         <height>601</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-image: url(:/images/img/brasil_-_reproducao.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QLabel" name="welcome">
        <property name="geometry">
         <rect>
-         <x>160</x>
-         <y>30</y>
-         <width>641</width>
-         <height>101</height>
+         <x>400</x>
+         <y>40</y>
+         <width>91</width>
+         <height>71</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -573,7 +614,7 @@ Color: #fefefe;</string>
 color: rgb(85, 170, 255);</string>
        </property>
        <property name="text">
-        <string>Bem Vindo a Urna Eletrônica Brasileira,&lt;br&gt; Vote uma vez e seja roubado pra sempre ! </string>
+        <string>Login</string>
        </property>
       </widget>
       <widget class="QLabel" name="loginLabel">
@@ -592,38 +633,582 @@ color: rgb(85, 170, 255);</string>
         <string/>
        </property>
       </widget>
-      <zorder>brazel</zorder>
-      <zorder>usernameText</zorder>
-      <zorder>passwordText</zorder>
-      <zorder>loginButton</zorder>
-      <zorder>welcome</zorder>
-      <zorder>loginLabel</zorder>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_numero">
-     <widget class="QFrame" name="frame_votacao">
+    <widget class="QWidget" name="page_numero_vereador">
+     <widget class="QFrame" name="frame_votacao_vereador">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>901</width>
-        <height>601</height>
+        <height>801</height>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
-      <widget class="QPushButton" name="votar">
+      <widget class="QPushButton" name="votar_vereador">
        <property name="geometry">
         <rect>
          <x>470</x>
-         <y>530</y>
-         <width>101</width>
-         <height>41</height>
+         <y>550</y>
+         <width>140</width>
+         <height>40</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton#votar {
+    color: #b1b1b1;
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #565656,
+	stop: 0.1 #525252,
+	stop: 0.5 #4e4e4e,
+	stop: 0.9 #4a4a4a,
+	stop: 1 #464646);
+    border-width: 1px;
+    border-color: #1e1e1e;
+    border-style: solid;
+    border-radius: 6;
+
+}
+
+QPushButton:hover#votar {
+	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+
+}
+
+QPushButton:pressed#votar {
+   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+}</string>
+       </property>
+       <property name="text">
+        <string>Confirmar</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="vereador_nome">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>-10</y>
+         <width>261</width>
+         <height>101</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 36pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Vereador&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="background_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>901</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="vereador_1">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>100</y>
+         <width>71</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="maxLength">
+        <number>1</number>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="vereador_3">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>100</y>
+         <width>71</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="maxLength">
+        <number>1</number>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="vereador_2">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>100</y>
+         <width>71</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="maxLength">
+        <number>1</number>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="vereador_5">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>71</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="maxLength">
+        <number>1</number>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="vereador_4">
+       <property name="geometry">
+        <rect>
+         <x>340</x>
+         <y>100</y>
+         <width>71</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="maxLength">
+        <number>1</number>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="branco_vereador">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>550</y>
+         <width>110</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton#branco {
+    color: #b1b1b1;
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #565656,
+	stop: 0.1 #525252,
+	stop: 0.5 #4e4e4e,
+	stop: 0.9 #4a4a4a,
+	stop: 1 #464646);
+    border-width: 1px;
+    border-color: #1e1e1e;
+    border-style: solid;
+    border-radius: 6;
+
+}
+
+QPushButton:hover#branco {
+	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+
+}
+
+QPushButton:pressed#branco {
+   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+}</string>
+       </property>
+       <property name="text">
+        <string>Branco</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="text_error_vereador">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>210</y>
+         <width>281</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="corrige_vereador">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>549</y>
+         <width>110</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton#corrige_2 {
+    color: #b1b1b1;
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #565656,
+	stop: 0.1 #525252,
+	stop: 0.5 #4e4e4e,
+	stop: 0.9 #4a4a4a,
+	stop: 1 #464646);
+    border-width: 1px;
+    border-color: #1e1e1e;
+    border-style: solid;
+    border-radius: 6;
+
+}
+
+QPushButton:hover#corrige_2 {
+	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+
+}
+
+QPushButton:pressed#corrige_2 {
+   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+}</string>
+       </property>
+       <property name="text">
+        <string>Corrige</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="votar_nome_vereador">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>210</y>
+         <width>211</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="votar_partido_vereador">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>300</y>
+         <width>151</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="votar_foto_vereador">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>50</y>
+         <width>151</width>
+         <height>181</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_branco_vereador">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>180</y>
+         <width>491</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>30</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="numero_vereador">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>120</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Número:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_nulo_vereador">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>270</y>
+         <width>251</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>30</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>VOTO NULO</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_nome_vereador">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>210</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Nome:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_partido_vereador">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>300</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Partido:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_foto_vereador">
+       <property name="geometry">
+        <rect>
+         <x>690</x>
+         <y>250</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Vereador(a)</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="gridLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>289</x>
+         <y>339</y>
+         <width>271</width>
+         <height>201</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayoutvereador">
+        <property name="horizontalSpacing">
+         <number>25</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>15</number>
+        </property>
+       </layout>
+      </widget>
+      <zorder>background_3</zorder>
+      <zorder>votar_vereador</zorder>
+      <zorder>vereador_nome</zorder>
+      <zorder>vereador_1</zorder>
+      <zorder>vereador_3</zorder>
+      <zorder>vereador_2</zorder>
+      <zorder>vereador_5</zorder>
+      <zorder>vereador_4</zorder>
+      <zorder>branco_vereador</zorder>
+      <zorder>text_error_vereador</zorder>
+      <zorder>corrige_vereador</zorder>
+      <zorder>votar_nome_vereador</zorder>
+      <zorder>votar_partido_vereador</zorder>
+      <zorder>votar_foto_vereador</zorder>
+      <zorder>label_branco_vereador</zorder>
+      <zorder>numero_vereador</zorder>
+      <zorder>label_nulo_vereador</zorder>
+      <zorder>label_nome_vereador</zorder>
+      <zorder>label_partido_vereador</zorder>
+      <zorder>label_foto_vereador</zorder>
+      <zorder>gridLayoutWidget</zorder>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_numero_prefeito">
+     <widget class="QFrame" name="frame_votacao_prefeito">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>901</width>
+        <height>801</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QPushButton" name="votar_prefeito">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>550</y>
+         <width>140</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton#votar {
@@ -686,7 +1271,7 @@ QPushButton:pressed#votar {
       <widget class="QLabel" name="prefeito_nome">
        <property name="geometry">
         <rect>
-         <x>270</x>
+         <x>100</x>
          <y>0</y>
          <width>261</width>
          <height>121</height>
@@ -699,27 +1284,11 @@ QPushButton:pressed#votar {
         <string>&lt;center&gt;Prefeito&lt;/center&gt;</string>
        </property>
       </widget>
-      <widget class="QLabel" name="vereador_nome">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>270</y>
-         <width>261</width>
-         <height>101</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 36pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Vereador&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="prefeito_1">
        <property name="geometry">
         <rect>
-         <x>310</x>
-         <y>150</y>
+         <x>150</x>
+         <y>110</y>
          <width>71</width>
          <height>71</height>
         </rect>
@@ -728,23 +1297,25 @@ QPushButton:pressed#votar {
         <font>
          <family>MS Shell Dlg 2</family>
          <pointsize>30</pointsize>
-         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
          <stylestrategy>PreferDefault</stylestrategy>
         </font>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="inputMethodHints">
-        <set>Qt::ImhNone</set>
+        <set>Qt::InputMethodHint::ImhNone</set>
        </property>
        <property name="inputMask">
         <string/>
@@ -761,12 +1332,15 @@ QPushButton:pressed#votar {
        <property name="cursorPosition">
         <number>0</number>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLineEdit" name="prefeito_2">
        <property name="geometry">
         <rect>
-         <x>390</x>
-         <y>150</y>
+         <x>230</x>
+         <y>110</y>
          <width>71</width>
          <height>71</height>
         </rect>
@@ -777,101 +1351,24 @@ QPushButton:pressed#votar {
        <property name="maxLength">
         <number>1</number>
        </property>
-      </widget>
-      <widget class="QLineEdit" name="vereador_1">
-       <property name="geometry">
-        <rect>
-         <x>220</x>
-         <y>430</y>
-         <width>71</width>
-         <height>71</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="maxLength">
-        <number>1</number>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
-      <widget class="QLineEdit" name="vereador_3">
+      <widget class="QPushButton" name="branco_prefeito">
        <property name="geometry">
         <rect>
-         <x>380</x>
-         <y>430</y>
-         <width>71</width>
-         <height>71</height>
+         <x>230</x>
+         <y>550</y>
+         <width>110</width>
+         <height>40</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="maxLength">
-        <number>1</number>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="vereador_2">
-       <property name="geometry">
-        <rect>
-         <x>300</x>
-         <y>430</y>
-         <width>71</width>
-         <height>71</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="maxLength">
-        <number>1</number>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="vereador_5">
-       <property name="geometry">
-        <rect>
-         <x>540</x>
-         <y>430</y>
-         <width>71</width>
-         <height>71</height>
-        </rect>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="maxLength">
-        <number>1</number>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="vereador_4">
-       <property name="geometry">
-        <rect>
-         <x>460</x>
-         <y>430</y>
-         <width>71</width>
-         <height>71</height>
-        </rect>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 30pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="maxLength">
-        <number>1</number>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="branco">
-       <property name="geometry">
-        <rect>
-         <x>250</x>
-         <y>530</y>
-         <width>101</width>
-         <height>41</height>
-        </rect>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton#branco {
@@ -915,12 +1412,12 @@ QPushButton:pressed#branco {
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QLabel" name="text_error">
+      <widget class="QLabel" name="text_error_prefeito">
        <property name="geometry">
         <rect>
-         <x>610</x>
-         <y>250</y>
-         <width>281</width>
+         <x>20</x>
+         <y>200</y>
+         <width>471</width>
          <height>51</height>
         </rect>
        </property>
@@ -931,14 +1428,20 @@ QPushButton:pressed#branco {
         <string/>
        </property>
       </widget>
-      <widget class="QPushButton" name="corrige_2">
+      <widget class="QPushButton" name="corrige_prefeito">
        <property name="geometry">
         <rect>
-         <x>360</x>
-         <y>530</y>
-         <width>101</width>
-         <height>41</height>
+         <x>350</x>
+         <y>550</y>
+         <width>110</width>
+         <height>40</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>18</pointsize>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton#corrige_2 {
@@ -982,647 +1485,275 @@ QPushButton:pressed#corrige_2 {
         <bool>true</bool>
        </property>
       </widget>
-      <zorder>background_2</zorder>
-      <zorder>votar</zorder>
-      <zorder>prefeito_nome</zorder>
-      <zorder>vereador_nome</zorder>
-      <zorder>prefeito_1</zorder>
-      <zorder>prefeito_2</zorder>
-      <zorder>vereador_1</zorder>
-      <zorder>vereador_3</zorder>
-      <zorder>vereador_2</zorder>
-      <zorder>vereador_5</zorder>
-      <zorder>vereador_4</zorder>
-      <zorder>branco</zorder>
-      <zorder>text_error</zorder>
-      <zorder>corrige_2</zorder>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="page_votar">
-     <widget class="QFrame" name="frame_votar">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>901</width>
-        <height>601</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <widget class="QLabel" name="brazel_2">
+      <widget class="QLabel" name="votar_nome_prefeito">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>901</width>
-         <height>601</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-image: url(:/images/img/brasil_-_reproducao.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-      <widget class="QLabel" name="vototext">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>60</y>
-         <width>221</width>
-         <height>51</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 20pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Seu Voto Para</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="tela_Branca">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>60</y>
-         <width>621</width>
-         <height>401</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-      <widget class="QLabel" name="prefeito">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>100</y>
-         <width>161</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>&lt;center&gt;Prefeito&lt;/center&gt;</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="vereador">
-       <property name="geometry">
-        <rect>
-         <x>250</x>
-         <y>260</y>
-         <width>141</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>&lt;center&gt;Vereador&lt;/center&gt;</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="numero_Vereador">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>350</y>
-         <width>50</width>
-         <height>64</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Numero:</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="numero_Prefeito">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
+         <x>120</x>
          <y>200</y>
-         <width>50</width>
+         <width>231</width>
          <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="votar_partido_prefeito">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>250</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="votar_foto_prefeito">
+       <property name="geometry">
+        <rect>
+         <x>660</x>
+         <y>20</y>
+         <width>128</width>
+         <height>128</height>
         </rect>
        </property>
        <property name="text">
-        <string>Numero:</string>
+        <string/>
        </property>
       </widget>
-      <widget class="QLabel" name="nome_Prefeito">
+      <widget class="QLabel" name="votar_foto_viceprefeito">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>150</y>
-         <width>50</width>
+         <x>660</x>
+         <y>270</y>
+         <width>128</width>
+         <height>128</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_branco_prefeito">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>200</y>
+         <width>551</width>
+         <height>111</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>25</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="prefeito_numero">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>140</y>
+         <width>71</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Número:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_nome_prefeito">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>200</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Nome:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="nome_Vereador">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>311</y>
-         <width>50</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Nome:</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="confirma">
-       <property name="geometry">
-        <rect>
-         <x>500</x>
-         <y>480</y>
-         <width>101</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton#confirma {
-    color: #b1b1b1;
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #565656,
-	stop: 0.1 #525252,
-	stop: 0.5 #4e4e4e,
-	stop: 0.9 #4a4a4a,
-	stop: 1 #464646);
-    border-width: 1px;
-    border-color: #1e1e1e;
-    border-style: solid;
-    border-radius: 6;
-
-}
-
-QPushButton:hover#confirma {
-	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-
-}
-
-QPushButton:pressed#confirma {
-   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-}</string>
-       </property>
-       <property name="text">
-        <string>Confirmar</string>
-       </property>
-       <property name="autoDefault">
+      <widget class="QLabel" name="label_partido_prefeito">
+       <property name="enabled">
         <bool>true</bool>
        </property>
-      </widget>
-      <widget class="QPushButton" name="corrige">
        <property name="geometry">
         <rect>
-         <x>380</x>
-         <y>480</y>
-         <width>101</width>
-         <height>41</height>
+         <x>20</x>
+         <y>250</y>
+         <width>61</width>
+         <height>21</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton#corrige {
-    color: #b1b1b1;
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #565656,
-	stop: 0.1 #525252,
-	stop: 0.5 #4e4e4e,
-	stop: 0.9 #4a4a4a,
-	stop: 1 #464646);
-    border-width: 1px;
-    border-color: #1e1e1e;
-    border-style: solid;
-    border-radius: 6;
-
-}
-
-QPushButton:hover#corrige {
-	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-
-}
-
-QPushButton:pressed#corrige {
-   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-}</string>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
-        <string>Corrige</string>
-       </property>
-       <property name="autoDefault">
-        <bool>true</bool>
+        <string>Partido:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="nome_p_query">
+      <widget class="QLabel" name="label_nome_viceprefeito">
        <property name="geometry">
         <rect>
-         <x>80</x>
-         <y>150</y>
+         <x>20</x>
+         <y>290</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Vice-prefeito(a):</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="votar_nome_vice">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>290</y>
          <width>171</width>
          <height>21</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true">font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
        <property name="text">
         <string/>
        </property>
       </widget>
-      <widget class="QLabel" name="numero_p_query">
+      <widget class="QLabel" name="label_foto_prefeito">
        <property name="geometry">
         <rect>
-         <x>120</x>
-         <y>190</y>
-         <width>51</width>
-         <height>51</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 22pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="nome_v_query">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>310</y>
-         <width>191</width>
+         <x>690</x>
+         <y>170</y>
+         <width>81</width>
          <height>21</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true">font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
-        <string/>
+        <string>Prefeito(a)</string>
        </property>
       </widget>
-      <widget class="QLabel" name="numero_v_query">
+      <widget class="QLabel" name="label_foto_vice">
        <property name="geometry">
         <rect>
-         <x>110</x>
-         <y>360</y>
+         <x>670</x>
+         <y>410</y>
          <width>111</width>
-         <height>41</height>
+         <height>21</height>
         </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 22pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="branco_off">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>260</x>
-         <y>480</y>
-         <width>101</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton#branco_off {
-    color: #b1b1b1;
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #565656,
-	stop: 0.1 #525252,
-	stop: 0.5 #4e4e4e,
-	stop: 0.9 #4a4a4a,
-	stop: 1 #464646);
-    border-width: 1px;
-    border-color: #1e1e1e;
-    border-style: solid;
-    border-radius: 6;
-
-}
-
-QPushButton:hover#branco_off {
-	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-
-}
-
-QPushButton:pressed#branco_off {
-   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-}</string>
-       </property>
-       <property name="text">
-        <string>Branco</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="receber_imagemP">
-       <property name="geometry">
-        <rect>
-         <x>410</x>
-         <y>130</y>
-         <width>128</width>
-         <height>128</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-      <widget class="QLabel" name="receber_imagemV">
-       <property name="geometry">
-        <rect>
-         <x>410</x>
-         <y>300</y>
-         <width>128</width>
-         <height>128</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="senha">
-       <property name="geometry">
-        <rect>
-         <x>660</x>
-         <y>230</y>
-         <width>201</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ButtonText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Base">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Window">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ButtonText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Base">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Window">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ButtonText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>254</red>
-             <green>254</green>
-             <blue>254</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Base">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Window">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>51</red>
-             <green>51</green>
-             <blue>51</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
        </property>
        <property name="font">
         <font>
-         <kerning>true</kerning>
+         <pointsize>12</pointsize>
         </font>
        </property>
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">padding-left: 20px;
-padding-right: 20px;
-border-radius: 20px;
-background: #333;
-color: #fefefe;</string>
-       </property>
        <property name="text">
-        <string/>
-       </property>
-       <property name="frame">
-        <bool>false</bool>
-       </property>
-       <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
-       </property>
-       <property name="cursorPosition">
-        <number>0</number>
-       </property>
-       <property name="placeholderText">
-        <string>Senha</string>
+        <string>Vice-Prefeito(a)</string>
        </property>
       </widget>
-      <zorder>brazel_2</zorder>
-      <zorder>tela_Branca</zorder>
-      <zorder>vototext</zorder>
-      <zorder>prefeito</zorder>
-      <zorder>vereador</zorder>
-      <zorder>numero_Vereador</zorder>
-      <zorder>numero_Prefeito</zorder>
-      <zorder>nome_Prefeito</zorder>
-      <zorder>nome_Vereador</zorder>
-      <zorder>confirma</zorder>
-      <zorder>corrige</zorder>
-      <zorder>nome_p_query</zorder>
-      <zorder>numero_p_query</zorder>
-      <zorder>nome_v_query</zorder>
-      <zorder>numero_v_query</zorder>
-      <zorder>branco_off</zorder>
-      <zorder>receber_imagemP</zorder>
-      <zorder>receber_imagemV</zorder>
-      <zorder>senha</zorder>
+      <widget class="QLabel" name="label_nulo_prefeito">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>280</y>
+         <width>251</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>30</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>VOTO NULO</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="gridLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>340</y>
+         <width>271</width>
+         <height>201</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayoutprefeito">
+        <property name="horizontalSpacing">
+         <number>25</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>15</number>
+        </property>
+       </layout>
+      </widget>
+      <zorder>background_2</zorder>
+      <zorder>votar_prefeito</zorder>
+      <zorder>prefeito_nome</zorder>
+      <zorder>prefeito_1</zorder>
+      <zorder>prefeito_2</zorder>
+      <zorder>branco_prefeito</zorder>
+      <zorder>text_error_prefeito</zorder>
+      <zorder>corrige_prefeito</zorder>
+      <zorder>votar_nome_prefeito</zorder>
+      <zorder>votar_partido_prefeito</zorder>
+      <zorder>votar_foto_prefeito</zorder>
+      <zorder>votar_foto_viceprefeito</zorder>
+      <zorder>label_branco_prefeito</zorder>
+      <zorder>prefeito_numero</zorder>
+      <zorder>label_nome_prefeito</zorder>
+      <zorder>label_partido_prefeito</zorder>
+      <zorder>label_nome_viceprefeito</zorder>
+      <zorder>votar_nome_vice</zorder>
+      <zorder>label_foto_prefeito</zorder>
+      <zorder>label_foto_vice</zorder>
+      <zorder>label_nulo_prefeito</zorder>
+      <zorder>gridLayoutWidget_2</zorder>
      </widget>
     </widget>
     <widget class="QWidget" name="page_administrador">
@@ -1636,10 +1767,10 @@ color: #fefefe;</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
+       <enum>QFrame::Shadow::Plain</enum>
       </property>
       <widget class="QPushButton" name="cadastroCandidato">
        <property name="geometry">
@@ -1743,22 +1874,6 @@ QPushButton:pressed#zerarVotacao {
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QLabel" name="brazel_3">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>901</width>
-         <height>601</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-image: url(:/images/img/brasil_-_reproducao.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QStackedWidget" name="admStack">
        <property name="geometry">
         <rect>
@@ -1769,26 +1884,9 @@ QPushButton:pressed#zerarVotacao {
         </rect>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
-       <widget class="QWidget" name="page0">
-        <widget class="QFrame" name="frame_principal">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>120</width>
-           <height>80</height>
-          </rect>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-        </widget>
-       </widget>
+       <widget class="QWidget" name="eleitores"/>
        <widget class="QWidget" name="telacadastrar">
         <widget class="QFrame" name="frame_cadastro">
          <property name="geometry">
@@ -1800,10 +1898,10 @@ QPushButton:pressed#zerarVotacao {
           </rect>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <widget class="QLabel" name="fundo_2">
           <property name="geometry">
@@ -1875,8 +1973,8 @@ QPushButton:pressed#cadastrarCandidato {
          <widget class="QLineEdit" name="nomeCandidato">
           <property name="geometry">
            <rect>
-            <x>200</x>
-            <y>120</y>
+            <x>190</x>
+            <y>40</y>
             <width>301</width>
             <height>22</height>
            </rect>
@@ -1888,8 +1986,8 @@ QPushButton:pressed#cadastrarCandidato {
          <widget class="QLineEdit" name="nomePartido">
           <property name="geometry">
            <rect>
-            <x>200</x>
-            <y>170</y>
+            <x>190</x>
+            <y>90</y>
             <width>301</width>
             <height>22</height>
            </rect>
@@ -1901,8 +1999,8 @@ QPushButton:pressed#cadastrarCandidato {
          <widget class="QLineEdit" name="numeroPartido">
           <property name="geometry">
            <rect>
-            <x>200</x>
-            <y>210</y>
+            <x>190</x>
+            <y>130</y>
             <width>113</width>
             <height>22</height>
            </rect>
@@ -1914,40 +2012,24 @@ QPushButton:pressed#cadastrarCandidato {
            <string>Max: 5 Numeros</string>
           </property>
          </widget>
-         <widget class="QLineEdit" name="tipoCandidato">
-          <property name="geometry">
-           <rect>
-            <x>200</x>
-            <y>260</y>
-            <width>113</width>
-            <height>22</height>
-           </rect>
-          </property>
-          <property name="maxLength">
-           <number>8</number>
-          </property>
-          <property name="placeholderText">
-           <string>Vereador/Prefeito</string>
-          </property>
-         </widget>
          <widget class="QLabel" name="label_2">
           <property name="geometry">
            <rect>
             <x>70</x>
-            <y>110</y>
+            <y>10</y>
             <width>121</width>
-            <height>181</height>
+            <height>171</height>
            </rect>
           </property>
           <property name="text">
-           <string>Nome do Candidato:&lt;br&gt;&lt;br&gt;&lt;br&gt;Nome do Partido:&lt;br&gt;&lt;br&gt;&lt;br&gt;Numero da votação:&lt;br&gt;&lt;br&gt;&lt;br&gt;Tipo de Cargo:</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nome do Candidato:&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;Nome do Partido:&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;Numero da votação:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
          <widget class="QLabel" name="regLabel">
           <property name="geometry">
            <rect>
             <x>70</x>
-            <y>360</y>
+            <y>440</y>
             <width>241</width>
             <height>16</height>
            </rect>
@@ -1959,30 +2041,68 @@ QPushButton:pressed#cadastrarCandidato {
            <string>Complete os campos corretamente.</string>
           </property>
          </widget>
-         <widget class="QLabel" name="enviar_imagem">
+         <widget class="QGroupBox" name="groupBox">
           <property name="geometry">
            <rect>
-            <x>350</x>
-            <y>210</y>
-            <width>128</width>
-            <height>128</height>
+            <x>70</x>
+            <y>170</y>
+            <width>120</width>
+            <height>80</height>
            </rect>
           </property>
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/images/img/user.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <property name="title">
+           <string>Cargo:</string>
           </property>
+          <widget class="QRadioButton" name="radioprefeito">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>20</y>
+             <width>89</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>prefeito</string>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="radiovereador">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>50</y>
+             <width>89</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>vereador</string>
+           </property>
+          </widget>
          </widget>
-         <widget class="QPushButton" name="upload_foto">
+         <widget class="QGroupBox" name="grupo_foto">
           <property name="geometry">
            <rect>
-            <x>220</x>
-            <y>310</y>
-            <width>93</width>
-            <height>28</height>
+            <x>70</x>
+            <y>259</y>
+            <width>261</width>
+            <height>171</height>
            </rect>
           </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton#upload_foto {
+          <property name="title">
+           <string/>
+          </property>
+          <widget class="QPushButton" name="upload_foto">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>70</y>
+             <width>93</width>
+             <height>28</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton#upload_foto {
     color: #b1b1b1;
     background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
 	stop: 0 #565656,
@@ -2015,14 +2135,220 @@ QPushButton:pressed#upload_foto {
 	stop: 0.9 #282828,
 	stop: 1 #252525);
 }</string>
-          </property>
-          <property name="text">
-           <string>Upload Foto</string>
-          </property>
-          <property name="autoDefault">
-           <bool>true</bool>
-          </property>
+           </property>
+           <property name="text">
+            <string>Upload Foto</string>
+           </property>
+           <property name="autoDefault">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="enviar_imagem">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>20</y>
+             <width>128</width>
+             <height>128</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/images/img/user.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </widget>
+         <widget class="QGroupBox" name="grupo_foto_vice">
+          <property name="geometry">
+           <rect>
+            <x>370</x>
+            <y>260</y>
+            <width>281</width>
+            <height>171</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Vice-Prefeito(a)</string>
+          </property>
+          <widget class="QPushButton" name="upload_foto_vice">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>70</y>
+             <width>93</width>
+             <height>28</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton#upload_foto {
+    color: #b1b1b1;
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #565656,
+	stop: 0.1 #525252,
+	stop: 0.5 #4e4e4e,
+	stop: 0.9 #4a4a4a,
+	stop: 1 #464646);
+    border-width: 1px;
+    border-color: #1e1e1e;
+    border-style: solid;
+    border-radius: 6;
+
+}
+
+QPushButton:hover#upload_foto {
+	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+
+}
+
+QPushButton:pressed#upload_foto {
+   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+}</string>
+           </property>
+           <property name="text">
+            <string>Upload Foto</string>
+           </property>
+           <property name="autoDefault">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="enviar_imagem_vice">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>20</y>
+             <width>128</width>
+             <height>128</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/images/img/user.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>169</y>
+            <width>421</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Vice-Prefeito(a)</string>
+          </property>
+          <widget class="QLabel" name="label_3">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>30</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Nome do Vice:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="nomeVice">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>30</y>
+             <width>301</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="page">
+        <widget class="QPushButton" name="cadastrareleitor">
+         <property name="geometry">
+          <rect>
+           <x>290</x>
+           <y>320</y>
+           <width>80</width>
+           <height>24</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Cadastrar</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="nomeeleitor">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>160</y>
+           <width>113</width>
+           <height>24</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="raeleitor">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>160</y>
+           <width>113</width>
+           <height>24</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>130</y>
+           <width>49</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>nome:</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_5">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>140</y>
+           <width>49</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>ra</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="labelerroeleitor">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>250</y>
+           <width>291</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
         </widget>
        </widget>
       </widget>
@@ -2030,7 +2356,7 @@ QPushButton:pressed#upload_foto {
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>200</y>
+         <y>310</y>
          <width>93</width>
          <height>28</height>
         </rect>
@@ -2077,11 +2403,70 @@ QPushButton:pressed#logout_adm {
         <bool>true</bool>
        </property>
       </widget>
-      <zorder>brazel_3</zorder>
-      <zorder>cadastroCandidato</zorder>
-      <zorder>zerarVotacao</zorder>
-      <zorder>admStack</zorder>
-      <zorder>logout_adm</zorder>
+      <widget class="QPushButton" name="inserieleitores">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>200</y>
+         <width>93</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton#logout_adm {
+    color: #b1b1b1;
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #565656,
+	stop: 0.1 #525252,
+	stop: 0.5 #4e4e4e,
+	stop: 0.9 #4a4a4a,
+	stop: 1 #464646);
+    border-width: 1px;
+    border-color: #1e1e1e;
+    border-style: solid;
+    border-radius: 6;
+
+}
+
+QPushButton:hover#logout_adm {
+	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+
+}
+
+QPushButton:pressed#logout_adm {
+   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
+	stop: 0 #2d2d2d,
+	stop: 0.1 #2b2b2b,
+	stop: 0.5 #292929,
+	stop: 0.9 #282828,
+	stop: 1 #252525);
+}</string>
+       </property>
+       <property name="text">
+        <string>Eleitores</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>260</y>
+         <width>80</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>individual</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="page_auditor">
@@ -2095,27 +2480,11 @@ QPushButton:pressed#logout_adm {
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
-      <widget class="QLabel" name="brazel_4">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>901</width>
-         <height>601</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-image: url(:/images/img/brasil_-_reproducao.jpg);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QPushButton" name="logout_aud">
        <property name="geometry">
         <rect>
@@ -2218,57 +2587,6 @@ QPushButton:pressed#apurarVotos {
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="logEvent">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>91</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton#logEvent {
-    color: #b1b1b1;
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #565656,
-	stop: 0.1 #525252,
-	stop: 0.5 #4e4e4e,
-	stop: 0.9 #4a4a4a,
-	stop: 1 #464646);
-    border-width: 1px;
-    border-color: #1e1e1e;
-    border-style: solid;
-    border-radius: 6;
-
-}
-
-QPushButton:hover#logEvent {
-	background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-
-}
-
-QPushButton:pressed#logEvent {
-   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,
-	stop: 0 #2d2d2d,
-	stop: 0.1 #2b2b2b,
-	stop: 0.5 #292929,
-	stop: 0.9 #282828,
-	stop: 1 #252525);
-}</string>
-       </property>
-       <property name="text">
-        <string>Check Integrity</string>
-       </property>
-       <property name="autoDefault">
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QPushButton" name="eleitor">
        <property name="geometry">
         <rect>
@@ -2324,13 +2642,13 @@ QPushButton:pressed#eleitor {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>40</y>
-         <width>731</width>
-         <height>521</height>
+         <y>30</y>
+         <width>761</width>
+         <height>561</height>
         </rect>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="page_branco">
         <widget class="QFrame" name="frame_branco">
@@ -2349,10 +2667,10 @@ QPushButton:pressed#eleitor {
           </size>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
         </widget>
        </widget>
@@ -2367,10 +2685,10 @@ QPushButton:pressed#eleitor {
           </rect>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
         </widget>
         <widget class="QLabel" name="fundo_8">
@@ -2378,8 +2696,8 @@ QPushButton:pressed#eleitor {
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>731</width>
-           <height>521</height>
+           <width>751</width>
+           <height>561</height>
           </rect>
          </property>
          <property name="styleSheet">
@@ -2411,10 +2729,10 @@ QPushButton:pressed#eleitor {
           </rect>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <widget class="QLabel" name="fundo_9">
           <property name="geometry">
@@ -2445,10 +2763,10 @@ QPushButton:pressed#eleitor {
           </rect>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <widget class="QLabel" name="fundo_10">
           <property name="geometry">
@@ -2464,455 +2782,6 @@ QPushButton:pressed#eleitor {
           </property>
           <property name="text">
            <string/>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="senha_decrypt">
-          <property name="geometry">
-           <rect>
-            <x>270</x>
-            <y>230</y>
-            <width>201</width>
-            <height>41</height>
-           </rect>
-          </property>
-          <property name="palette">
-           <palette>
-            <active>
-             <colorrole role="WindowText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Text">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="ButtonText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Base">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Window">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </active>
-            <inactive>
-             <colorrole role="WindowText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Text">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="ButtonText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Base">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Window">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </inactive>
-            <disabled>
-             <colorrole role="WindowText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Text">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="ButtonText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Base">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Window">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </disabled>
-           </palette>
-          </property>
-          <property name="font">
-           <font>
-            <kerning>true</kerning>
-           </font>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">padding-left: 20px;
-padding-right: 20px;
-border-radius: 20px;
-background: #333;
-color: #fefefe;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="frame">
-           <bool>false</bool>
-          </property>
-          <property name="echoMode">
-           <enum>QLineEdit::Password</enum>
-          </property>
-          <property name="cursorPosition">
-           <number>0</number>
-          </property>
-          <property name="placeholderText">
-           <string>Senha</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="decriptar">
-          <property name="geometry">
-           <rect>
-            <x>320</x>
-            <y>290</y>
-            <width>91</width>
-            <height>31</height>
-           </rect>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">Padding: 1px;
-Border-radius: 5px;
-Background: #393;
-Color: #fefefe;</string>
-          </property>
-          <property name="text">
-           <string>Decriptar</string>
-          </property>
-          <property name="autoDefault">
-           <bool>true</bool>
-          </property>
-          <property name="default">
-           <bool>false</bool>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="tituloeleitor">
-          <property name="geometry">
-           <rect>
-            <x>270</x>
-            <y>170</y>
-            <width>201</width>
-            <height>41</height>
-           </rect>
-          </property>
-          <property name="palette">
-           <palette>
-            <active>
-             <colorrole role="WindowText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Text">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="ButtonText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Base">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Window">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </active>
-            <inactive>
-             <colorrole role="WindowText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Text">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="ButtonText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Base">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Window">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </inactive>
-            <disabled>
-             <colorrole role="WindowText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Text">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="ButtonText">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>254</red>
-                <green>254</green>
-                <blue>254</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Base">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-             <colorrole role="Window">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>51</red>
-                <green>51</green>
-                <blue>51</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </disabled>
-           </palette>
-          </property>
-          <property name="font">
-           <font>
-            <kerning>true</kerning>
-           </font>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">padding-left: 20px;
-padding-right: 20px;
-border-radius: 20px;
-background: #333;
-color: #fefefe;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="frame">
-           <bool>false</bool>
-          </property>
-          <property name="echoMode">
-           <enum>QLineEdit::Normal</enum>
-          </property>
-          <property name="cursorPosition">
-           <number>0</number>
-          </property>
-          <property name="placeholderText">
-           <string>Titulo</string>
           </property>
          </widget>
          <widget class="QLabel" name="votouem">
@@ -2931,6 +2800,24 @@ color: #fefefe;</string>
            <string/>
           </property>
          </widget>
+         <widget class="QLabel" name="label_aguardando">
+          <property name="geometry">
+           <rect>
+            <x>170</x>
+            <y>210</y>
+            <width>361</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>18</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>AGUARDANDO A LIBERAÇÃO</string>
+          </property>
+         </widget>
         </widget>
        </widget>
       </widget>
@@ -2947,10 +2834,10 @@ color: #fefefe;</string>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="background">
        <property name="geometry">
